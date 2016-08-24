@@ -1,1 +1,2 @@
-这是一个平时联系案例存放地址
+Git is a distributed version control system.
+Git is free software.
