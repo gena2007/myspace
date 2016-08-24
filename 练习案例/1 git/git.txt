@@ -1,0 +1,46 @@
+git的三个区：
+1，工作区
+2，暂存区：作为过渡层，避免误操作，保护工作区和版本区，分支处理
+3，版本区（库）
+
+
+1，在git上建立一个仓库
+2，cd test
+  进入到该托管项目的根目录。
+3，输入
+  git add .
+  将改动的地方添加到版本管理器
+4，输入
+  git  commit -m "changes log"
+  提交到本地的版本控制库里，
+  引号里面是你对本次提交的说明信息。
+5，最后输入
+  git push -u origin master
+  将你本地的仓库提交到你的github账号里，
+  此时会要求你输入你的github的账号和密码。
+
+
+可能出现的错误：
+一， "Could not read from remote repository.Please make sure you have the correct access rights."出现这个问题是因为没有在github账号添加SSH key
+   在终端输入ssh-keygen -t rsa -C "username"
+   （1）如果正常运行的话，会出现
+    Enter passphrase (empty for no passphrase):然后我们直接回车
+    （2）有的时候我们可能会出现
+    /Users/your username/.ssh/id_rsa already exists.
+    Overwrite (y/n)?
+    这说明你已经设置了存储地址，我们输入“y”覆盖
+    Overwrite (y/n)? y
+    回车
+上面的任意两种情况之后，会出现
+Enter same passphrase again:
+再次回车，这时候你会看见：
+Your identification has been saved in /Users/username/.ssh/id_rsa.
+Your public key has been saved in /Users/username/.ssh/id_rsa.pub.
+The key fingerprint is:
+58:42:8b:58:ad:4b:b5:b9:6d:79:bf:8c:f9:e2:2b:ed
+username
+这说明SSH key就已经生成了。文件目录就是：/Users/username/.ssh/id_rsa.pub.
+我们执行cat命令查看文件的内容：
+cat /User/username/.ssh/id_rsa.pub
+这时候会看见：
+ssh-rsa AAAAB3NzaC1yc2。。。。。。。。。
