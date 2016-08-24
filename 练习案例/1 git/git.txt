@@ -1,46 +1,35 @@
-git的三个区：
-1，工作区
-2，暂存区：作为过渡层，避免误操作，保护工作区和版本区，分支处理
-3，版本区（库）
+现在我们编写一个readme.txt文件
+第一步，用命令git add告诉Git，把文件添加到仓库：$ git add readme.txt
+第二步，用命令git commit告诉Git，把文件提交到仓库：$ git commit -m "wrote a readme file"
+运行git status命令看看结果（git status命令可以让我们时刻掌握仓库当前的状态，上面的命令告诉我们，readme.txt被修改过了，但还没有准备提交的修改）
+需要用git diff这个命令看看具体修改了什么内容$ git diff readme.txt
 
+添加远程仓库
+由于你的本地Git仓库和GitHub仓库之间的传输是通过SSH加密的，所以，需要一点设置：
+第1步：创建SSH Key。在用户主目录下，看看有没有.ssh目录，如果有，再看看这个目录下有没有id_rsa和id_rsa.pub这两个文件，如果已经有了，可直接跳到下一步。如果没有，打开Shell（Windows下打开Git Bash），创建SSH Key：$ ssh-keygen -t rsa -C "youremail@example.com"
+第2步：登陆GitHub，打开“Account settings”，“SSH Keys”页面：然后，点“Add SSH Key”，填上任意Title，在Key文本框里粘贴id_rsa.pub文件的内容：点“Add Key”，你就应该看到已经添加的Key：
+GitHub需要识别出你推送的提交确实是你推送的，GitHub允许你添加多个Key。假定你有若干电脑，你一会儿在公司提交，一会儿在家里提交，只要把每台电脑的Key都添加到GitHub，就可以在每台电脑上往GitHub推送了
 
-1，在git上建立一个仓库
-2，cd test
-  进入到该托管项目的根目录。
-3，输入
-  git add .
-  将改动的地方添加到版本管理器
-4，输入
-  git  commit -m "changes log"
-  提交到本地的版本控制库里，
-  引号里面是你对本次提交的说明信息。
-5，最后输入
-  git push -u origin master
-  将你本地的仓库提交到你的github账号里，
-  此时会要求你输入你的github的账号和密码。
+1，，登陆GitHub，然后，在右上角找到“Create a new repo”按钮，创建一个新的仓库
+2，在GitHub上的这个learngit仓库还是空的，GitHub告诉我们，可以从这个仓库克隆出新的仓库，也可以把一个已有的本地仓库与之关联，然后，把本地仓库的内容推送到GitHub仓库
+在本地的learngit仓库下运行命令$ git remote add origin git@github.com:gena2007/myspace.git
+3，把本地库的所有内容推送到远程库上 git push -u origin master
 
+从远程库克隆
+git clone git@github.com:gena2007/myspace.git
 
-可能出现的错误：
-一， "Could not read from remote repository.Please make sure you have the correct access rights."出现这个问题是因为没有在github账号添加SSH key
-   在终端输入ssh-keygen -t rsa -C "username"
-   （1）如果正常运行的话，会出现
-    Enter passphrase (empty for no passphrase):然后我们直接回车
-    （2）有的时候我们可能会出现
-    /Users/your username/.ssh/id_rsa already exists.
-    Overwrite (y/n)?
-    这说明你已经设置了存储地址，我们输入“y”覆盖
-    Overwrite (y/n)? y
-    回车
-上面的任意两种情况之后，会出现
-Enter same passphrase again:
-再次回车，这时候你会看见：
-Your identification has been saved in /Users/username/.ssh/id_rsa.
-Your public key has been saved in /Users/username/.ssh/id_rsa.pub.
-The key fingerprint is:
-58:42:8b:58:ad:4b:b5:b9:6d:79:bf:8c:f9:e2:2b:ed
-username
-这说明SSH key就已经生成了。文件目录就是：/Users/username/.ssh/id_rsa.pub.
-我们执行cat命令查看文件的内容：
-cat /User/username/.ssh/id_rsa.pub
-这时候会看见：
-ssh-rsa AAAAB3NzaC1yc2。。。。。。。。。
+Git鼓励大量使用分支：
+查看分支：git branch
+创建分支：git branch <name>
+切换分支：git checkout <name>
+创建+切换分支：git checkout -b <name>
+合并某分支到当前分支：git merge <name>
+删除分支：git branch -d <name>
+
+首先，我们创建dev分支，然后切换到dev分支：git checkout -b dev 相当于以下两条命令git branch dev git checkout dev
+然后，用git branch命令查看当前分支git branch
+然后，我们就可以在dev分支上正常提交，比如对readme.txt做个修改，加上一行提交git add readme.txt, git commit -m "branch test"
+现在，dev分支的工作完成，我们就可以切换回master分支git checkout master
+现在，我们把dev分支的工作成果合并到master分支上git merge dev
+合并完成后，就可以放心地删除dev分支了git branch -d dev
+删除后，查看branch，就只剩下master分支了git branch
