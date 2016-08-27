@@ -1,0 +1,206 @@
+JavaScript历史：1995年网景JavaScript-》1996微软模仿开发JScript-》ECMAScript标准（为了让JavaScript成为全球标准，几个公司联合ECMA（European Computer Manufacturers Association）组织定制了JavaScript语言的标准）
+
+NaN这个特殊的Number与所有其他值都不相等，包括它自己,唯一能判断NaN的方法是通过isNaN()函数
+
+要比较两个浮点数是否相等，只能计算它们之差的绝对值，看是否小于某个阈值
+浮点数在运算过程中会产生误差，因为计算机无法精确表示无限循环小数。
+1 / 3 === (1 - 2 / 3); // false
+Math.abs(1 / 3 - (1 - 2 / 3)) < 0.0000001; // true
+
+大多数情况下，我们都应该用null。undefined仅仅在判断函数参数是否传递的情况下有用
+
+转义字符\可以转义很多字符，比如\n表示换行，\t表示制表符，字符\本身也要转义，所以\\表示的字符就是\
+由于多行字符串用\n写起来比较费事，所以最新的ES6标准新增了一种多行字符串的表示方法，用` ... `表示
+alert(`多行
+字符串
+测试`);
+
+把多个字符串连接起来，可以用+号连接
+var firstname = "su"
+var lastname = "rong"
+var msg = "my name is" +  firstname + lastname;
+ES6新增了一种模板字符串，表示方法和上面的多行字符串一样，但是它会自动替换字符串中的变量
+var firstname = "su"
+var lastname = "rong"
+var msg = `my name is ${firstname} ${lastname}`
+
+字符串是不可变的，如果对字符串的某个索引赋值，不会有任何错误，但是，也没有任何效果
+Array可以通过索引把对应的元素修改为新的值
+
+slice()就是对应String的substring()版本
+不给slice()传递任何参数，它就会从头到尾截取所有元素。利用这一点，我们可以很容易地复制一个Array
+
+push()向Array的末尾添加若干元素
+pop()则把Array的最后一个元素删除掉
+要往Array的头部添加若干元素，使用unshift()方法
+shift()方法则把Array的第一个元素删掉
+
+var aaaaa = [1,2,3,4];
+aaaaa.splice(4, 0 , 5,6 ) //新增
+aaaaa.splice(4, 2 , 7,8 ) //更新
+aaaaa.splice(4, 2); //删除
+
+检测对象是否拥有某一属性，可以用in操作符：
+'name' in surong
+判断一个属性是否是对象自身拥有的，而不是继承得到的，可以用hasOwnProperty()方法
+surong.hasOwnProperty('toString')
+surong.hasOwnProperty('name')
+
+avaScript的默认对象表示方式{}可以视为其他语言中的Map或Dictionary的数据结构，即一组键值对
+JavaScript的对象有个小问题，就是键必须是字符串。但实际上Number或者其他数据类型作为键也是非常合理的
+为了解决这个问题，最新的ES6规范引入了新的数据类型Map
+var m = new Map();
+m.set("name", "surong")
+alert(m.get("name"));
+
+var m = new Map([[1,"surong"], [2,"maolin"]]);
+alert(m.get(1)); //获取
+m.delete(2);  //删除
+m.set(2,'maolin');  //设置
+
+Set和Map类似，也是一组key的集合，但不存储value
+var s1 = new Set();
+var s1 = new Set([1,2,3,3,"3"]); //自动过滤重复数据
+s1.add(5) //新增
+s1.delete(5) //删除
+
+遍历Array可以采用下标循环
+遍历Map和Set就无法使用下标
+统一集合类型，ES6标准引入了新的iterable类型，Array、Map和Set都属于iterable类型： 具有iterable类型的集合可以通过新的for ... of循环来遍历
+for ... in循环由于历史遗留问题，它遍历的实际上是对象的属性名称。一个Array数组实际上也是一个对象，它的每个元素的索引被视为一个属性
+直接使用iterable内置的forEach方法，它接收一个函数，每次迭代就自动回调该函数
+//数组
+var a = ['A', 'B', 'C'];
+a.forEach(function (element, index, array) {
+    // element: 指向当前元素的值
+    // index: 指向当前索引
+    // array: 指向Array对象本身
+    alert(element);
+});
+//Set
+var s = new Set(['A', 'B', 'C']);
+s.forEach(function (element, sameElement, set) {
+    alert(element);
+});
+//Map
+var m = new Map([[1, 'x'], [2, 'y'], [3, 'z']]);
+m.forEach(function (value, key, map) {
+    alert(value);
+});
+
+为了获取除了已定义参数a、b之外的参数，我们不得不用arguments，并且循环要从索引2开始以便排除前两个参数，这种写法很别扭，只是为了获得额外的rest参数
+ES6标准引入了rest参数:
+function foo(a, b, ...rest) {
+    console.log('a = ' + a);
+    console.log('b = ' + b);
+    console.log(rest);
+}
+foo(1,2,3,4,5)
+
+为了解决块级作用域，ES6引入了新的关键字let，用let替代var可以申明一个块级作用域的变量
+function foo() {
+    var sum = 0;
+    for (let i=0; i<100; i++) {
+        sum += i;
+    }
+    i += 1; // SyntaxError
+}
+
+ES6标准引入了新的关键字const来定义常量，const与let都具有块级作用域
+const PI = 3.14;
+
+统计一下代码一共调用了多少次parseInt()，可以把所有的调用都找出来，然后手动加上count += 1，不过这样做太傻了,最佳方案是用我们自己的函数替换掉默认的parseInt()
+var count = 0;
+var oldParseInt = parseInt; // 保存原函数
+window.parseInt = function () {
+    count += 1;
+    return oldParseInt.apply(null, arguments); // 调用原函数
+};
+parseInt("13")
+parseInt("13")
+parseInt("13")
+
+filter也是一个常用的操作，它用于把Array的某些元素过滤掉，然后返回剩下的元素
+var arr = [1, 2, 4, 5, 6, 9, 10, 15];
+var r = arr.filter(function (x) {
+    return x % 2 !== 0;
+});
+r; // [1, 5, 9, 15]
+
+sort()方法也是一个高阶函数，它还可以接收一个比较函数来实现自定义的排序
+var arr = [10, 20, 1, 2];
+arr.sort(function (x, y) {
+    if (x < y) {
+        return -1;
+    }
+    if (x > y) {
+        return 1;
+    }
+    return 0;
+}); // [1, 2, 10, 20]
+
+不要使用new Number()、new Boolean()、new String()创建包装对象；
+用parseInt()或parseFloat()来转换任意类型到number
+判断Array要使用Array.isArray(arr)
+判断某个全局变量是否存在用typeof window.myVar === 'undefined'
+函数内部判断某个变量是否存在用typeof myVar === 'undefined'
+
+123.toString(); // SyntaxError
+特殊处理一下
+123..toString();
+(123).toString();
+
+[0-9a-zA-Z\_]可以匹配一个数字、字母或者下划线
+[0-9a-zA-Z\_]+可以匹配[至少有一个]数字、字母或者下划线组成的字符串
+[a-zA-Z\_\$][0-9a-zA-Z\_\$]*可以匹配由字母或下划线、$开头，后接[任意]个由一个数字、字母或者下划线
+[a-zA-Z\_\$][0-9a-zA-Z\_\$]{0, 19}更精确地限制了变量的长度是1-20个字符
+A|B可以匹配A或B
+正则识别连续的空格 'a b   c'.split(/\s+/); // ['a', 'b', 'c']
+'a,b;; c  d'.split(/[\s\,\;]+/);
+
+用()表示的就是要提取的分组（Group）。比如：^(\d{3})-(\d{3,8})$分别定义了两个组
+var re = /^(\d{3})-(\d{3,8})$/;
+re.exec('010-12345'); // ['010-12345', '010', '12345']
+
+特别指出的是，正则匹配默认是贪婪匹配，也就是匹配尽可能多的字符。举例如下，匹配出数字后面的0
+var re = /^(\d+)(0*)$/;
+re.exec('102300'); // ['102300', '102300', '']
+
+由于\d+采用贪婪匹配，直接把后面的0全部匹配了，结果0*只能匹配空字符串了。必须让\d+采用非贪婪匹配（也就是尽可能少匹配），才能把后面的0匹配出来，加个?就可以让\d+采用非贪婪匹配
+var re = /^(\d+?)(0*)$/;
+re.exec('102300'); // ['102300', '1023', '00']
+
+全局匹配类似搜索，因此不能使用/^...$/，那样只会最多匹配一次
+
+var xiaoming = {
+                                               "name": "小明",
+                                               "age": 14,
+                                               "gender": true,
+                                               "height": 1.65,
+                                               "grade": null,
+                                               "middle-school": "\"W3C\" Middle School",
+                                               "skills": [
+                                                 "JavaScript",
+                                                 "Java",
+                                                 "Python",
+                                                 "Lisp"
+                                               ]
+                                             }
+//第二个参数用于控制如何筛选对象的键值(输出指定的属性)
+JSON.stringify(xiaoming, ['name', 'skills'], '  ');
+//第二个参数用于控制如何筛选对象的键值(传入一个函数，这样对象的每个键值对都会被函数先处理)
+function convert(key, value) {
+    if (typeof value === 'string') {
+        return value.toUpperCase();
+    }
+    return value;
+}
+JSON.stringify(xiaoming, convert, '  ');
+
+//JSON.parse()还可以接收一个函数，用来转换解析出的属性
+JSON.parse('{"name":"小明","age":14}', function (key, value) {
+    if (key === 'name') {
+        return value + '同学';
+    }
+    return value;
+}); // Object {name: '小明同学', age: 14}

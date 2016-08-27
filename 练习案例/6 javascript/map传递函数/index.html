@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script>
+        //由于map()方法定义在JavaScript的Array中，我们调用Array的map()方法，传入我们自己的函数，就得到了一个新的Array作为结果
+        //map()作为高阶函数，事实上它把运算规则抽象了
+        var numbers = [1, 4, 9];
+        var roots = numbers.map(Math.sqrt);
+        //将arr每个数据转换成字符串
+        var arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        arr.map(String); // ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+        //将每个arr数据转换成某个值
+        function pow(x) {
+            return x * x;
+        }
+        var arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        arr.map(pow); // [1, 4, 9, 16, 25, 36, 49, 64, 81]
+        //不需要map()，写一个循环，也可以计算出结果
+        var f = function (x) {
+            return x * x;
+        };
+
+        var arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        var result = [];
+        for (var i=0; i<arr.length; i++) {
+            result.push(f(arr[i]));
+        }
+        //Using map to reformat objects in an array
+        var kvArray = [{key:1, value:10}, {key:2, value:20}, {key:3, value: 30}];
+        var reformattedArray = kvArray.map(function(obj){
+            var rObj = {};
+            rObj[obj.key] = obj.value;
+            return rObj;
+        });
+        //将字符串转换成数组
+        var map = Array.prototype.map;
+        var a = map.call('Hello World', function(x) { return x.charCodeAt(0); });
+        //利用map()把字符串变成整数, 由于map()接收的回调函数可以有3个参数：callback(currentValue, index, array)，通常我们仅需要第一个参数
+        var arr = ['1', '2', '3'];
+        var r;
+        function returnInt(element) {
+            return parseInt(element, 10);
+        }
+        r = arr.map(returnInt);
+        alert('[' + r[0] + ', ' + r[1] + ', ' + r[2] + ']');
+        //或者可以
+        var arr = ['1', '2', '3'];
+        var r = arr.map(Number);
+        alert('[' + r[0] + ', ' + r[1] + ', ' + r[2] + ']');
+    </script>
+</head>
+<body>
+
+</body>
+</html>
