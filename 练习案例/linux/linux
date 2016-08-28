@@ -1,0 +1,12 @@
+linux常用命令
+
+删除文件夹(非空) rm -r dirname
+新建文件夹 mkdir dirname
+进入目录 cd /e/dirname
+显示当前目录 pwd
+显示当前目录文件 ls
+
+新建文件(一般模式) vi test.txt
+一般模式之中，只要按下 i, o, a 等字符就可以进入编辑模式了
+按下 [ESC] 按钮回到一般模式
+在一般模式中按下 :wq保存

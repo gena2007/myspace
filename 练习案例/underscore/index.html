@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../lib/jQuery.js"></script>
+    <script src="../lib/underscore.js"></script>
+    <script>
+        //underscore会把自身绑定到唯一的全局变量_上
+        //underscore为集合类对象提供了一致的接口。集合类是指Array和Object，暂不支持Map和Set。
+        var obj = {
+            name: 'bob',
+            school: 'No.1 middle school',
+            address: 'xueyuan road'
+        };
+        //mapObject
+        var upper = _.mapObject(obj, function (value, key) {
+            return value.toUpperCase();
+        });
+        //every集合的所有元素都满足条件时
+        _.every([1, 4, 7, -3, -9], (x) => x > 0);
+        //come集合的至少一个元素满足条件时
+        _.some([1, 4, 7, -3, -9], (x) => x > 0)
+        //max / min 这两个函数直接返回集合中最大和最小的数，空集合会返回-Infinity和Infinity，所以要先判断集合不为空
+        var arr = [3, 5, 7, 9];
+        _.max(arr); // 9
+        _.min(arr); // 3
+        _.max([]) //-Infinity
+        _.min([]) //Infinity
+        _.max({ a: 1, b: 2, c: 3 }); // 3 //如果集合是Object，max()和min()只作用于value，忽略掉key
+        //groupBy把集合的元素按照key归类，key由传入的函数返回
+        var scores = [20, 81, 75, 40, 91, 59, 77, 66, 72, 88, 99];
+        var groups = _.groupBy(scores, function (x) {
+            if (x < 60) {
+                return 'C';
+            } else if (x < 80) {
+                return 'B';
+            } else {
+                return 'A';
+            }
+        });
+        //shuffle()用洗牌算法随机打乱一个集合
+        _.shuffle([1, 2, 3, 4, 5, 6]);
+        //sample()则是随机选择一个或多个元素
+        _.sample([1, 2, 3, 4, 5, 6]);
+        //first / last 分别取第一个和最后一个元素
+        var arr = [2, 4, 6, 8];
+        _.first(arr); // 2
+        _.last(arr); // 8
+        //flatten 无论这个Array里面嵌套了多少个Array，flatten()最后都把它们变成一个一维数组
+        _.flatten([1, [2], [3, [[4], [5]]]]); // [1, 2, 3, 4, 5]
+        //zip把两个或多个数组的所有元素按索引对齐，然后按索引合并成新数组
+        var names = ['Adam', 'Lisa', 'Bart'];
+        var scores = [85, 92, 59];
+        _.zip(names, scores);
+        //unzip反过来
+        var namesAndScores = [['Adam', 85], ['Lisa', 92], ['Bart', 59]];
+        _.unzip(namesAndScores);
+        //object, 与其用zip()，为啥不把名字和分数直接对应成Object呢
+        var names = ['Adam', 'Lisa', 'Bart'];
+        var scores = [85, 92, 59];
+        _.object(names, scores); // {Adam: 85, Lisa: 92, Bart: 59}
+        //range()让你快速生成一个序列，不再需要用for循环实现了
+        _.range(10); //从0开始小于10
+        _.range(1, 11); //从1开始小于11
+        _.range(0, 30, 5); //从0开始小于30，步长5
+        _.range(0, -10, -1); //从0开始大于-10，步长-1
+
+
+        //underscore充分发挥JavaScript的函数式编程特性, 提供了大量JavaScript本身没有的高阶函数
+        //bind
+        var log = console.log;
+        log('Hello, world!'); //不行 直接调用log()传入的this指针是undefined
+        log.call(console, 'Hello, world!');
+        //bind()可以帮我们把console对象直接绑定在log()的this指针上
+        var log = _.bind(console.log, console);
+        log('Hello, world!');
+
+        //partial()就是为一个函数创建偏函数, 创建偏函数的目的是将原函数的某些参数固定住，可以降低新函数调用的难度。
+        //根据Math.pow(x, y)创建出来的偏函数,固定住了原函数的第一个参数
+        var pow2N = _.partial(Math.pow, 2);
+        pow2N(3); // 8
+        pow2N(5); // 32
+        //创建一个偏函数cube(x)，计算x3，可以用_作占位符，固定住第二个参数
+        var cube = _.partial(Math.pow, _, 3);
+        cube(3); // 27
+        cube(5); // 125
+        //memoize如果一个函数调用开销很大，我们就可能希望能把结果缓存下来，以便后续调用时直接获得结果
+        //连续两次调用factorial(10)，第二次调用并没有计算，而是直接返回上次计算后缓存的结果。不过，当你计算factorial(9)的时候，仍然会重新计算。
+        var factorial = _.memoize(function(n) {
+            console.log('start calculate ' + n + '!...');
+            if (n < 2) {
+                return 1;
+            }
+            return n * factorial(n - 1);
+        });
+        factorial(10); // 3628800
+        //once()保证某个函数执行且仅执行一次
+        var register = _.once(function () {
+            alert('Register ok!');
+        });
+        register();
+        //delay让一个函数延迟执行，效果和setTimeout()是一样
+        _.delay(alert, 2000);
+        _.delay(alert, 2000, 'Hello,', 'world!');
+        //keys 返回一个object自身所有的key，但不包含从原型链继承下来的
+        //allKeys()除了object自身的key，还包含从原型链继承下来的
+        function Student(name, age) {
+            this.name = name;
+            this.age = age;
+        }
+        var xiaoming = new Student('小明', 20);
+        _.keys(xiaoming); // ['name', 'age']
+        _.allKeys(xiaoming); // ['name', 'age', 'school']
+        //values()返回object自身但不包含原型链继承的所有值
+        var obj = {
+            name: '小明',
+            age: 20
+        };
+        _.values(obj); // ['小明', 20]
+        //mapObject()就是针对object的map版本
+        var obj = { a: 1, b: 2, c: 3 };
+        _.mapObject(obj, (v, k) => 100 + v); // { a: 101, b: 102, c: 103 }
+        //invert()把object的每个key-value来个交换，key变成value，value变成key
+        var obj = {
+            Adam: 90,
+            Lisa: 85,
+            Bart: 59
+        };
+        _.invert(obj); // { '59': 'Bart', '85': 'Lisa', '90': 'Adam' }
+        //extend()把多个object的key-value合并到第一个object并返回
+        //extendOwn()和extend()类似，但获取属性时忽略从原型链继承下来的属性
+        var a = {name: 'Bob', age: 20};
+        _.extend(a, {age: 15}, {age: 88, city: 'Beijing'}); // {name: 'Bob', age: 88, city: 'Beijing'}
+        //clone() 会把原有对象的所有属性都复制到新的对象中
+        //clone()是“浅复制”。所谓“浅复制”就是说，两个对象相同的key所引用的value其实是同一对象：
+        var source = {
+            name: '小明',
+            age: 20,
+            skills: ['JavaScript', 'CSS', 'HTML']
+        };
+        var copied = _.clone(source);
+        //isEqual
+        var o1 = { name: 'Bob', skills: { Java: 90, JavaScript: 99 }};
+        var o2 = { name: 'Bob', skills: { JavaScript: 99, Java: 90 }};
+        o1 === o2; // false
+        _.isEqual(o1, o2); // true
+        //对Array也可以比较
+        var o1 = ['Bob', { skills: ['Java', 'JavaScript'] }];
+        var o2 = ['Bob', { skills: ['Java', 'JavaScript'] }];
+        o1 === o2; // false
+        _.isEqual(o1, o2); // true
+    </script>
+</head>
+<body>
+
+</body>
+</html>

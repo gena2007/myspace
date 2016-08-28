@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../../lib/md5.js"></script>
+    <script>
+        //用户输入的id为input-password的<input>没有name属性。没有name属性的<input>的数据不会被提交
+        function checkForm() {
+            var input_pwd = document.getElementById('input-password');
+            var md5_pwd = document.getElementById('md5-password');
+            // 把用户输入的明文变为MD5:
+            md5_pwd.value = hex_md5(input_pwd.value);
+            // 继续下一步:
+        }
+        //当一个表单包含<input type="file">时，表单的enctype必须指定为multipart/form-data，method必须指定为post，浏览器才能正确编码并以multipart/form-data格式发送表单的数据。
+        //新增的File API允许JavaScript读取文件内容，获得更多的文件信息(提供了File和FileReader两个主要对象)
+        function upload() {
+            var
+                    fileInput = document.getElementById('test-image-file'),
+                    info = document.getElementById('test-file-info'),
+                    preview = document.getElementById('test-image-preview');
+            // 监听change事件:
+            fileInput.addEventListener('change', function () {
+                // 清除背景图片:
+                preview.style.backgroundImage = '';
+                // 检查文件是否选择:
+                if (!fileInput.value) {
+                    info.innerHTML = '没有选择文件';
+                    return;
+                }
+                // 获取File引用:
+                var file = fileInput.files[0];
+                // 获取File信息:
+                info.innerHTML = `文件: ${file.name} 大小: ${file.size} 修改:${file.lastModifiedDate} `;
+                if (file.type !== 'image/jpeg' && file.type !== 'image/png' && file.type !== 'image/gif') {
+                    alert('不是有效的图片文件!');
+                    return;
+                }
+                // 读取文件:
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var
+                            data = e.target.result; // 'data:image/jpeg;base64,/9j/4AAQSk...(base64编码)...'
+                    preview.style.backgroundImage = 'url(' + data + ')'; //如果需要服务器端处理，把字符串base64,后面的字符发送给服务器并用Base64解码就可以得到原始文件的二进制内容
+                };
+                // 以DataURL的形式读取文件:
+                reader.readAsDataURL(file);
+            });
+        }
+        window.onload = function(){
+            upload();
+        }
+    </script>
+</head>
+<body>
+<form id="login-form" method="post" onsubmit="return checkForm()">
+    <input type="text" id="username" name="username">
+    <input type="password" id="input-password">
+    <input type="hidden" id="md5-password" name="password">
+
+    <button type="submit">Submit</button>
+</form>
+<input type="file" name="file" id="test-image-file">
+<span id="test-file-info"></span>
+<div id="test-image-preview" style="width:906px;height:800px;">
+
+</div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../../lib/jQuery.js"></script>
+    <script>
+        $(function(){
+            //针对特定元素的扩展
+            $('#main a').external();
+        });
+        $.fn.external = function(){
+            // return返回的each()返回结果，支持链式调用:
+            return this.filter('a').each(function () {
+                var a = $(this);
+                var url = a.attr('href');
+                if (url && (url.indexOf('http://')===0 || url.indexOf('https://')===0)) {
+                            a.attr('href', 'javascript:;')
+                            .removeAttr('target')
+                            .click(function () {
+                                if(confirm('你确定要前往' + url + '？')) {
+                                    window.open(url);
+                                }
+                            });
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<div id="main">
+    <a href="http://www.baidu.com">baidu</a>
+    <a href="http://www.sina.com">sina</a>
+</div>
+</body>
+</html>

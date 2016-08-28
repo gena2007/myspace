@@ -1,3 +1,7 @@
+//未完成
+jQuery源码分析
+underscore源码分析
+
 JavaScript历史：1995年网景JavaScript-》1996微软模仿开发JScript-》ECMAScript标准（为了让JavaScript成为全球标准，几个公司联合ECMA（European Computer Manufacturers Association）组织定制了JavaScript语言的标准）
 
 NaN这个特殊的Number与所有其他值都不相等，包括它自己,唯一能判断NaN的方法是通过isNaN()函数
@@ -204,3 +208,23 @@ JSON.parse('{"name":"小明","age":14}', function (key, value) {
     }
     return value;
 }); // Object {name: '小明同学', age: 14}
+
+加载一个新页面，可以调用location.assign()
+
+服务器在设置Cookie时可以使用httpOnly，设定了httpOnly的Cookie将不能被JavaScript读取
+
+parentElement.insertBefore(newElement, referenceElement);
+
+当一个表单包含<input type="file">时，表单的enctype必须指定为multipart/form-data，method必须指定为post，浏览器才能正确编码并以multipart/form-data格式发送表单的数据。
+
+在浏览器中，有些JavaScript代码只有在用户触发下才能执行
+var input = $('#test-input');
+input.val('change it!');
+input.change(); // 触发change事件
+延迟执行的window.open('/');将被浏览器拦截;
+
+编写一个jQuery插件的原则
+1,给$.fn绑定函数，实现插件的代码逻辑；
+2,插件函数最后要return this;以支持链式调用；
+3,插件函数要有默认值，绑定在$.fn.<pluginName>.defaults上；
+4,用户在调用时可传入设定值以便覆盖默认值。

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        //AJAX主要依靠XMLHttpRequest对象
+        function success(text) {
+            var textarea = document.getElementById('test-response-text');
+            textarea.value = text;
+        }
+        function fail(code) {
+            var textarea = document.getElementById('test-response-text');
+            textarea.value = 'Error code: ' + code;
+        }
+        function createXttpRequest(){
+            var request;
+            if (window.XMLHttpRequest) {
+                request = new XMLHttpRequest();
+            } else {
+                request = new ActiveXObject('Microsoft.XMLHTTP');
+            }
+            return request;
+        }
+        var request = createXttpRequest(); // 新建XMLHttpRequest对象
+        request.onreadystatechange = function () { // 状态发生变化时，函数被回调
+            if (request.readyState === 4) { // 成功完成
+                if (request.status === 200) { // 判断响应结果:
+                    return success(request.responseText); // 成功，通过responseText拿到响应的文本:
+                } else {
+                    return fail(request.status); // 失败，根据响应码判断失败原因:
+                }
+            } else {
+                // HTTP请求还在继续...
+            }
+        }
+        // 发送请求:
+        request.open('GET', '/api/categories');
+        request.send();
+
+        //用JavaScript请求外域（就是其他网站）的URL:
+        //一是通过Flash插件发送HTTP请求，这种方式可以绕过浏览器的安全限制，但必须安装Flash，并且跟Flash交互。不过Flash用起来麻烦，而且现在用得也越来越少了。
+        //二是通过在同源域名下架设一个代理服务器来转发，JavaScript负责把请求发送到代理服务器,代理服务器再把结果返回，这样就遵守了浏览器的同源策略。这种方式麻烦之处在于需要服务器端额外做开发
+        //第三种方式称为JSONP，它有个限制，只能用GET请求，并且要求返回JavaScript。这种方式跨域实际上是利用了浏览器允许跨域引用JavaScript资源
+
+        //JSONP
+        //http://api.money.126.net/data/feed/0000001,1399001?callback=refreshPrice 将得到如下返回refreshPrice({"0000001":{"code": "0000001", ... });
+        //我们需要首先在页面中准备好回调函数
+        function refreshPrice(data) {
+            var p = document.getElementById('test-jsonp');
+            p.innerHTML = '当前价格：' +
+                    data['0000001'].name +': ' +
+                    data['0000001'].price + '；' +
+                    data['1399001'].name + ': ' +
+                    data['1399001'].price;
+        }
+        //最后用getPrice()函数触发
+        function getPrice() {
+            var
+                    js = document.createElement('script'),
+                    head = document.getElementsByTagName('head')[0];
+            js.src = 'http://api.money.126.net/data/feed/0000001,1399001?callback=refreshPrice';
+            head.appendChild(js);
+        }
+        getPrice();
+
+        //CORS(Cross-Origin Resource Sharing)
+        //当JavaScript向外域（如sina.com）发起请求后，浏览器收到响应后，首先检查Access-Control-Allow-Origin是否包含本域，如果是，则此次跨域请求成功，如果不是，则请求失败，JavaScript将无法获取到响应的任何数据。
+        //这种跨域请求，称之为“简单请求”。简单请求包括GET、HEAD和POST（POST的Content-Type类型,仅限application/x-www-form-urlencoded、multipart/form-data和text/plain）
+    </script>
+</head>
+<body>
+<span id="test-jsonp"></span>
+</body>
+</html>

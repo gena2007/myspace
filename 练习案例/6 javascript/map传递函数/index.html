@@ -5,6 +5,7 @@
     <script>
         //由于map()方法定义在JavaScript的Array中，我们调用Array的map()方法，传入我们自己的函数，就得到了一个新的Array作为结果
         //map()作为高阶函数，事实上它把运算规则抽象了
+        //map() 方法返回一个由原数组中的每个元素调用一个指定方法后的返回值组成的新数组，forEach为数组中的每个元素执行一次回调函数
         var numbers = [1, 4, 9];
         var roots = numbers.map(Math.sqrt);
         //将arr每个数据转换成字符串

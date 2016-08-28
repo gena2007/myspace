@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        function xilou(){
+            this.name="xilou";
+            this.sex="男";
+            this.num=0;
+        }
+        xilou.prototype.count=function(self){
+            var _this = self;
+            _this.num+=1;
+            console.log(_this.num);
+            if(_this.num>10){return;}
+            setTimeout(function(){_this.count(_this);},1000,_this);//正确
+        }
+        var x=new xilou();
+        x.count(x);
+    </script>
+</head>
+<body>
+
+</body>
+</html>

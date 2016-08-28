@@ -1,0 +1,8 @@
+Node.js: 基于JavaScript语言和V8引擎的开源Web服务器项目
+2014年从Node.js项目fork出了io.js项目，决定单独发展，但两者实际上是兼容的
+
+Node.js环境中，也有唯一的全局对象，但不叫window，而叫global
+1，global.console
+2，process //process也是Node.js提供的一个对象，它代表当前Node.js进程
+
+由于Node环境执行的JavaScript代码是服务器端代码，所以，绝大部分需要在服务器运行期反复执行业务逻辑的代码，必须使用异步代码

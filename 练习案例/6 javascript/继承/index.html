@@ -39,8 +39,8 @@
             return s;
         }
         //当我们用obj.xxx访问一个对象的属性时，JavaScript引擎先在当前对象上查找该属性，如果没有找到，就到其原型对象上找，如果还没有找到，就一直上溯到Object.prototype对象，最后，如果还没有找到，就只能返回undefined
-        var arr = [1, 2, 3]; //arr ----> Array.prototype ----> Object.prototype ----> null
-        function foo() { return 0; } //foo ----> Function.prototype ----> Object.prototype ----> null
+        var arr = [1, 2, 3]; //arr --&ndash;&gt; Array.prototype --&ndash;&gt; Object.prototype --&ndash;&gt; null
+        function foo() { return 0; } //foo --&ndash;&gt; Function.prototype --&ndash;&gt; Object.prototype --&ndash;&gt; null
         //构造函数的方法来创建对象，
         function Student(name) {
             this.name = name;
@@ -57,7 +57,7 @@
         xiaoming.constructor === Student.prototype.constructor; // true
         Student.prototype.constructor === Student; // true
         Object.getPrototypeOf(xiaoming) === Student.prototype; // true
-        //借助一个中间对象来实现正确的原型链new PrimaryStudent() ----> PrimaryStudent.prototype ----> Student.prototype ----> Object.prototype ----> null
+        //借助一个中间对象来实现正确的原型链new PrimaryStudent() --&ndash;&gt; PrimaryStudent.prototype --&ndash;&gt; Student.prototype --&ndash;&gt; Object.prototype ----> null
         //PrimaryStudent.prototype = Student.prototype;最简单粗暴的方法, 是不行的！如果这样的话，PrimaryStudent和Student共享一个原型对象
         function Student(props) {
             this.name = props.name || 'Unnamed';
