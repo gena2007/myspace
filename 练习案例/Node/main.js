@@ -160,6 +160,24 @@ const hash = crypto.createHash('md5'); //sha1|sha256|sha512
 const hmac = crypto.createHmac('sha256', 'secret-key');
 hash.update('123456');
 hash.update('hello');
-console.log(hmac.digest('hex'));
+//console.log(hmac.digest('hex'));
 
 //AES是一种常用的对称加密算法，加解密都用同一个密钥。crypto模块提供了AES支持，但是需要自己封装好函数，便于使用
+//在应用中要注意，如果加解密双方一方用Nodejs，另一方用Java、PHP等其它语言，需要仔细测试。如果无法正确解密，要确认双方是否遵循同样的AES算法，字符串密钥和IV是否相同，加密后的数据是否统一为hex或base64格式
+function aesEncrypt(data, key){ //加密
+    var cipher = crypto.createCipher("aes192", key); //AES有很多不同的算法，如aes192，aes-128-ecb，aes-256-cbc等
+    var crypted = cipher.update(data, 'utf-8', 'base64'); //加密结果通常有两种表示方法：hex和base64
+    crypted += cipher.final('base64');
+    return crypted;
+}
+function aesDecrypt(data, key) { //解密
+    const decipher = crypto.createDecipher('aes192', key);
+    var decrypted = decipher.update(encrypted, 'base64', 'utf8');
+    decrypted += decipher.final('utf8');
+    return decrypted;
+}
+var data = '123456';
+var key = 'surong';
+var encrypted = aesEncrypt(data, key);
+var decrypted  = aesDecrypt(encrypted, key);
+//console.log(encrypted);
